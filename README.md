@@ -6,8 +6,12 @@ Doing this as a toy project for C#, as well as to beat my friends!
 
 It only works on IE so far, because Chrome doesnt work well with the application commands
 
-## WIP
+Max thread sleep time seems to peak around 150. 
 
-So far we can send key stroke commands to the browser window.
+## TODO
 
-We now need to do some image recognition to determine which key stroke to send
+1. Implement look ahead. Currently, image recognition is only done around the LumberJack. If we can look at whats ahead of us, we can enter commands more quickly.
+
+2. A better image recognition. It still does classify the images correctly in some situations (when there are no branches, and the LumberJack is on the right)
+
+3. Multithreading for finding the starting branch. Speeds things up a little bit by spawning multiple threads to search different areas on the screen
