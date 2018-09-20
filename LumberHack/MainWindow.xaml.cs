@@ -54,17 +54,17 @@ namespace LumberHack
         // Does the initial dirty work
         private void Bootstrap()
         {
-            this.noBranchRightBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/nobranchright.jpg");
-            this.noBranchLeftBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/nobranchleft.jpg");
+            this.noBranchRightBmp = (Bitmap)Bitmap.FromFile("nobranchright.jpg");
+            this.noBranchLeftBmp = (Bitmap)Bitmap.FromFile("nobranchleft.jpg");
 
-            this.leftBranchAboveBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/leftbranchabove.jpg");
-            this.rightBranchAboveBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/rightbranchabove.jpg");
+            this.leftBranchAboveBmp = (Bitmap)Bitmap.FromFile("leftbranchabove.jpg");
+            this.rightBranchAboveBmp = (Bitmap)Bitmap.FromFile("rightbranchabove.jpg");
 
-            this.leftBranchDirectAboveBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/leftbranchdirectabove.jpg");
-            this.rightBranchDirectAboveBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/rightbranchdirectabove.jpg");
+            this.leftBranchDirectAboveBmp = (Bitmap)Bitmap.FromFile("leftbranchdirectabove.jpg");
+            this.rightBranchDirectAboveBmp = (Bitmap)Bitmap.FromFile("rightbranchdirectabove.jpg");
 
-            this.leftBranchBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/leftbranch.jpg");
-            this.rightBranchBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/rightbranch.jpg");
+            this.leftBranchBmp = (Bitmap)Bitmap.FromFile("leftbranch.jpg");
+            this.rightBranchBmp = (Bitmap)Bitmap.FromFile("rightbranch.jpg");
 
             myTextBlock.Background = Brushes.LightYellow;
 
