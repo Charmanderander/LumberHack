@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
+using AForge.Imaging.Filters;
 using AForge.Imaging;
+using Brushes = System.Windows.Media.Brushes;
 using Size = System.Drawing.Size;
+using System.Threading.Tasks;
 
 namespace LumberHack
 {
@@ -41,7 +43,16 @@ namespace LumberHack
         private Bitmap leftBranchBmp;
         private Bitmap rightBranchBmp;
 
+        
         public MainWindow()
+        {
+            InitializeComponent();
+
+            Bootstrap();
+        }
+
+        // Does the initial dirty work
+        private void Bootstrap()
         {
             this.noBranchRightBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/nobranchright.jpg");
             this.noBranchLeftBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/nobranchleft.jpg");
@@ -55,31 +66,38 @@ namespace LumberHack
             this.leftBranchBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/leftbranch.jpg");
             this.rightBranchBmp = (Bitmap)Bitmap.FromFile("C:/Users/Chan Family/source/repos/LumberHack/LumberHack/images/rightbranch.jpg");
 
-            InitializeComponent();
+            myTextBlock.Background = Brushes.LightYellow;
+
+            myTextBlock.Text += "Press start to find the LumberJack!\n";
 
             // Get the process of the browser
             GetProcess();
-            
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void Button_Left(object sender, RoutedEventArgs e)
-        {
-            SendKey("LEFT");
-        }
-
-        private void Button_Right(object sender, RoutedEventArgs e)
-        {
-            SendKey("RIGHT");
-        }
-
-        private void Button_Space(object sender, RoutedEventArgs e)
+        // When the start button is pressed
+        private async void Button_Space(object sender, RoutedEventArgs e)
         {
             int[] coordinates = new int[2];
+
+            UpdateTextBlock("Finding LumberJack...\n");
+            
+            await Task.Run(() => FindStartingBranch(ref coordinates));
+
+            UpdateTextBlock("Found Lumberjack! Dont move your window!\n");
+
+            ChoppingLogic(coordinates[0], coordinates[1]);
+
+            UpdateTextBlock("Game Over!");
+        }
+
+
+        private void UpdateTextBlock(string text)
+        {
+            myTextBlock.Text += text;
+        }
+
+        private void ChoppingLogic(int x, int y)
+        {
             float[] similarity = new float[8];
             int maxIndex;
             float maxValue;
@@ -87,13 +105,10 @@ namespace LumberHack
 
             var bmpScreen = new Bitmap(280, 160, PixelFormat.Format16bppGrayScale);
 
-            //Get the coordinates of the starting position
-            FindStartingBranch(ref coordinates);
-
             do
             {
-                bmpScreen = GetCurrentScreen(coordinates[0], coordinates[1]);
-                bmpScreen.Save("ss"+step+".jpg", ImageFormat.Jpeg);
+                bmpScreen = GetCurrentScreen(x, y);
+                //bmpScreen.Save("ss"+step+".jpg", ImageFormat.Jpeg);
 
                 similarity[0] = GetSimilarity(bmpScreen, noBranchRightBmp);
                 similarity[1] = GetSimilarity(bmpScreen, noBranchLeftBmp);
@@ -115,62 +130,61 @@ namespace LumberHack
                     // no branch right
                     case 0:
                         Console.WriteLine("nobranchright");
-                        SendKey("LEFT");
+                        SendCommand("{LEFT}");
                         break;
 
                     // no branch left
                     case 1:
                         Console.WriteLine("nobranchleft");
-                        SendKey("RIGHT");
+                        SendCommand("{RIGHT}");
                         break;
-                   
+
                     // left branch above
                     case 2:
                         Console.WriteLine("leftbranchabove");
-                        SendKey("RIGHT");
+                        SendCommand("{RIGHT}");
                         break;
 
                     // right branch above
                     case 3:
                         Console.WriteLine("rightbranchabove");
-                        SendKey("LEFT");
+                        SendCommand("{LEFT}");
                         break;
 
                     // left branch direct above
                     case 4:
                         Console.WriteLine("leftbranchdirectabove");
-                        SendKey("RIGHT");
+                        SendCommand("{RIGHT}");
                         break;
 
                     // right branch direct above
                     case 5:
                         Console.WriteLine("rightbranchdirectabove");
-                        SendKey("LEFT");
+                        SendCommand("{LEFT}");
                         break;
 
                     // left branch
                     case 6:
                         Console.WriteLine("leftbranch");
-                        SendKey("RIGHT");
+                        SendCommand("{RIGHT}");
                         break;
 
                     // right branch
                     case 7:
                         Console.WriteLine("rightbranch");
-                        SendKey("LEFT");
+                        SendCommand("{LEFT}");
                         break;
 
                     default:
                         break;
                 }
                 step++;
-                Thread.Sleep(1000);
-            } while (similarity[0]>0.93 || similarity[1] > 0.93 || similarity[2] > 0.93 ||
-                     similarity[3] > 0.93 || similarity[4] > 0.93 || similarity[5] > 0.93 ||
-                     similarity[6] > 0.93 || similarity[7] > 0.93);
-
+                Thread.Sleep(145);
+                
+            } while (similarity.Max() > 0.90 );
         }
 
+        // Sends command to the browser
         private void SendCommand(string command)
         {
             GetProcess();
@@ -178,27 +192,6 @@ namespace LumberHack
             SetForegroundWindow((int)ieProcess.MainWindowHandle);
             SendKeys.SendWait(command);
             SendKeys.Flush();
-        }
-
-        private void SendKey(string command)
-        {
-            switch (command)
-            {
-                case "LEFT":
-                    SendCommand("{LEFT}");
-                    break;
-
-                case "RIGHT":
-                    SendCommand("{RIGHT}");
-                    break;
-
-                case "SPACE":
-                    SendCommand(" ");
-                    break;
-
-                default:
-                    break;
-            }
         }
 
         // Get the process of the browser so we can send comamnds to it
@@ -228,7 +221,7 @@ namespace LumberHack
             var totalWidth = Screen.PrimaryScreen.Bounds.Width;
             var totalHeight = Screen.PrimaryScreen.Bounds.Height;
 
-            var bmpScreen = new Bitmap(280, 160, PixelFormat.Format16bppGrayScale);
+            var bmpScreen = new Bitmap(280, 160, PixelFormat.Format24bppRgb);
 
             float nobranchrightSim;
             float nobranchleftSim;
@@ -245,7 +238,7 @@ namespace LumberHack
                     nobranchrightSim = GetSimilarity(bmpScreen, noBranchRightBmp);
                     nobranchleftSim = GetSimilarity(bmpScreen, noBranchLeftBmp);
                     
-                    if (nobranchrightSim > 0.93 || nobranchleftSim > 0.93)
+                    if (nobranchrightSim > 0.98 || nobranchleftSim > 0.98)
                     {
                         
                         Console.WriteLine("{0} x {1}", i, j);
@@ -264,6 +257,7 @@ namespace LumberHack
             coordinates[1] = j;
         }
 
+        // Takes a screenshot, and returns the bitmap
         private Bitmap GetCurrentScreen(int x, int y)
         {
             //Create a new bitmap.
@@ -287,7 +281,7 @@ namespace LumberHack
             float score;
 
             ExhaustiveTemplateMatching tm = new ExhaustiveTemplateMatching(0);
-
+            
             // Compare two images
             TemplateMatch[] matchings = tm.ProcessImage(currentBranch, targetBranch);
 

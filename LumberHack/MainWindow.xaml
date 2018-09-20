@@ -5,14 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LumberHack"
         mc:Ignorable="d"
-        Title="MainWindow" ResizeMode="NoResize" Height="450" Width="800">
+        Title="MainWindow" ResizeMode="NoResize" Height="450" Width="398.939">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="472,371,0,0" TextWrapping="Wrap" Text="CPS:" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="508,369,0,0" TextWrapping="Wrap" Text="Clicks Per Second" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
-        <Button Content="Down" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Width="75" Click="Button_Right"/>
-        <Button Content="Up" HorizontalAlignment="Left" Margin="291,369,0,0" VerticalAlignment="Top" Width="75" Click="Button_Left"/>
-        <Button Content="Start Game" HorizontalAlignment="Left" Margin="337,335,0,0" VerticalAlignment="Top" Width="75" Click="Button_Space"/>
+        <Button Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Space" Margin="150,354,0,0"/>
         <Image HorizontalAlignment="Left" Height="100" Margin="210,137,0,0" VerticalAlignment="Top" Width="402" RenderTransformOrigin="0.51,0.506"/>
+        <TextBlock Name="myTextBlock" HorizontalAlignment="Left" Margin="100,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="171" Width="196"/>
 
     </Grid>
 </Window>
