@@ -12,6 +12,7 @@
         <Button Content="Down" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Width="75" Click="Button_Right"/>
         <Button Content="Up" HorizontalAlignment="Left" Margin="291,369,0,0" VerticalAlignment="Top" Width="75" Click="Button_Left"/>
         <Button Content="Start Game" HorizontalAlignment="Left" Margin="337,335,0,0" VerticalAlignment="Top" Width="75" Click="Button_Space"/>
+        <Image HorizontalAlignment="Left" Height="100" Margin="210,137,0,0" VerticalAlignment="Top" Width="402" RenderTransformOrigin="0.51,0.506"/>
 
     </Grid>
 </Window>
