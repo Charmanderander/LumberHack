@@ -8,6 +8,12 @@ It only works on IE so far, because Chrome doesnt work well with the application
 
 Max thread sleep time seems to peak around 150. 
 
+Max score with assistance: 367 (meaning in rows of no branches, I manually press left or right to speed things up)
+
+Max score without assistance: 352
+
+Not very impressive, but able to beat most human players!
+
 ## TODO
 
 1. Implement look ahead. Currently, image recognition is only done around the LumberJack. If we can look at whats ahead of us, we can enter commands more quickly.
